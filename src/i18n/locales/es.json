@@ -117,6 +117,7 @@
    "settings.service.form.customUrlPremiumInfo" : "Para añadir tus propios servicios necesitas una Cuenta Colaborador Premium de Franz.",
    "settings.service.form.customUrlUpgradeAccount" : "Asciende tu cuenta",
    "settings.service.form.customUrlValidationError" : "No se pudo validar el servidor personalizado {name}.",
+   "settings.service.form.teamIdValidationError": "Identidad Team es necesario.",
    "settings.service.form.deleteButton" : "Eliminar servicio",
    "settings.service.form.editServiceHeadline" : "Editar {name}",
    "settings.service.form.enableAudio" : "Habilitar audio",

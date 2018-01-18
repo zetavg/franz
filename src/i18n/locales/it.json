@@ -117,6 +117,7 @@
    "settings.service.form.customUrlPremiumInfo" : "Per aggiungere servizi self hosted, devi avere un account Franz da Premium Supporter.",
    "settings.service.form.customUrlUpgradeAccount" : "Aggiorna il tuo account",
    "settings.service.form.customUrlValidationError" : "Impossibile validare il server personalizzato {name}.",
+   "settings.service.form.teamIdValidationError": "Non è possibile omettere team ID.",
    "settings.service.form.deleteButton" : "Elimina servizio",
    "settings.service.form.editServiceHeadline" : "Modifica {name}",
    "settings.service.form.enableAudio" : "Attiva audio",

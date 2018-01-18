@@ -117,6 +117,7 @@
    "settings.service.form.customUrlPremiumInfo" : "Pour ajouter des services auto-hébergés, vous avez besoin d'un compte Supporter Premium Franz.",
    "settings.service.form.customUrlUpgradeAccount" : "Améliorez votre compte",
    "settings.service.form.customUrlValidationError" : "Impossible de valider le serveur personnalisé {name}.",
+   "settings.service.form.teamIdValidationError": "Identité Team est obligatoire.",
    "settings.service.form.deleteButton" : "Supprimer le service",
    "settings.service.form.editServiceHeadline" : "Modifier {name}",
    "settings.service.form.enableAudio" : "Activer l'audio",

@@ -109,6 +109,7 @@
   "settings.service.form.tabOnPremise": "Self hosted ⭐️",
   "settings.service.form.useHostedService": "Use the hosted {name} service.",
   "settings.service.form.customUrlValidationError": "Could not validate custom {name} server.",
+  "settings.service.form.teamIdValidationError": "Team ID is required.",
   "settings.service.form.customUrlPremiumInfo": "To add self hosted services, you need a Franz Premium Supporter Account.",
   "settings.service.form.customUrlUpgradeAccount": "Upgrade your account",
   "settings.service.form.indirectMessageInfo": "You will be notified about all new messages in a channel, not just @username, @channel, @here, ...",

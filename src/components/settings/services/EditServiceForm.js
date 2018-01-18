@@ -56,6 +56,10 @@ const messages = defineMessages({
     id: 'settings.service.form.customUrlValidationError',
     defaultMessage: '!!!Could not validate custom {name} server.',
   },
+  teamIdValidationError: {
+    id: 'settings.service.form.teamIdValidationError',
+    defaultMessage: '!!!Team ID is required.',
+  },
   customUrlPremiumInfo: {
     id: 'settings.service.form.customUrlPremiumInfo',
     defaultMessage: '!!!To add self hosted services, you need a Franz Premium Supporter Account.',
@@ -151,15 +155,24 @@ export default class EditServiceForm extends Component {
           }
         }
 
-        if (isValid) {
-          this.props.onSubmit(values);
-        } else {
+        if (!isValid) {
           form.invalidate('url-validation-error');
         }
 
         this.setState({ isValidatingCustomUrl: false });
+
+        if (recipe.hasTeamId) {
+          isValid = !!values.team.trim()
+          form.invalidate('team-validation-error');
+          console.log('ha')
+        }
+
+        if (isValid) {
+          this.props.onSubmit(values);
+        }
+
       },
-      onError: () => {},
+      onError: () => console.log('error validating')
     });
   }
 
@@ -245,11 +258,18 @@ export default class EditServiceForm extends Component {
                 )}
                 {recipe.hasTeamId && (
                   <TabItem title={intl.formatMessage(messages.tabHosted)}>
-                    <Input
-                      field={form.$('team')}
-                      prefix={recipe.urlInputPrefix}
-                      suffix={recipe.urlInputSuffix}
-                    />
+                    <div>
+                      <Input
+                        field={form.$('team')}
+                        prefix={recipe.urlInputPrefix}
+                        suffix={recipe.urlInputSuffix}
+                      />
+                      {form.error === 'team-validation-error' && (
+                        <p className="franz-form__error">
+                          {intl.formatMessage(messages.teamIdValidationError)}
+                        </p>
+                      )}
+                    </div>
                   </TabItem>
                 )}
                 {recipe.hasCustomUrl && (

@@ -117,6 +117,7 @@
    "settings.service.form.customUrlPremiumInfo" : "Um einen selbst gehosteten Dienst hinzuzufügen, brauchst du ein Franz Premium-Supporter Konto.",
    "settings.service.form.customUrlUpgradeAccount" : "Dein Konto upgraden",
    "settings.service.form.customUrlValidationError" : "Dein {name}-Server konnte nicht verifiziert werden.",
+   "settings.service.form.teamIdValidationError": "Team ID erforderlich.",
    "settings.service.form.deleteButton" : "Dienst löschen",
    "settings.service.form.editServiceHeadline" : "{name} bearbeiten",
    "settings.service.form.enableAudio" : "Audio aktivieren",
