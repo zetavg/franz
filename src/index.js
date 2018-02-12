@@ -11,6 +11,7 @@ import Settings from './electron/Settings';
 import handleDeepLink from './electron/deepLinking';
 import { appId } from './package.json'; // eslint-disable-line import/no-unresolved
 import './electron/exception';
+import { ensureWindowIsOnADisplay } from './electron/offscreen'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -76,6 +77,8 @@ const createWindow = () => {
     backgroundColor: '#3498db',
     autoHideMenuBar: true,
   });
+
+  ensureWindowIsOnADisplay(mainWindow);
 
   // Initialize System Tray
   const trayIcon = new Tray();
