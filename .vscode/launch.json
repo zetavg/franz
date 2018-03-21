@@ -34,7 +34,7 @@
             "protocol": "inspector",
             "env": {
                 "LOCAL_API": "1",
-                "DEBUG": "*,-engine.io*,-socket.io*"
+                "DEBUG": ""
             }
         },
         {

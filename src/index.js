@@ -4,6 +4,8 @@ import path from 'path';
 
 import windowStateKeeper from 'electron-window-state';
 
+import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+
 import { isDevMode, isMac, isWindows } from './environment';
 import ipcApi from './electron/ipc-api';
 import Tray from './lib/Tray';
@@ -162,7 +164,12 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  installExtension(REACT_DEVELOPER_TOOLS)
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log('An error occurred: ', err));
+  createWindow();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
