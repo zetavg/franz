@@ -85,6 +85,10 @@ const createWindow = () => {
     backgroundColor: '#3498db',
   });
 
+  if (isLinux) {
+    mainWindow.setMenuBarVisibility(settings.get('isMenuBarVisible'));
+  }
+
   // Initialize System Tray
   const trayIcon = new Tray();
 

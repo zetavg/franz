@@ -2,7 +2,9 @@ import { remote, shell } from 'electron';
 import { observable, autorun, computed } from 'mobx';
 import { defineMessages } from 'react-intl';
 
-import { isMac, ctrlKey, cmdKey } from '../environment';
+import { isMac, isLinux, ctrlKey, cmdKey } from '../environment';
+
+const debug = require('debug')('Menu');
 
 const { app, Menu, dialog } = remote;
 
@@ -62,6 +64,10 @@ const menuItems = defineMessages({
   emojiSymbols: {
     id: 'menu.edit.emojiSymbols',
     defaultMessage: '!!!Emoji & Symbols',
+  },
+  toggleMenuBar: {
+    id: 'menu.view.toggleMenuBar',
+    defaultMessage: '!!!Toggle Menu Bar',
   },
   resetZoom: {
     id: 'menu.view.resetZoom',
@@ -542,6 +548,30 @@ export default class FranzMenu {
         window.location.reload();
       },
     });
+
+    if (isMac || isLinux) {
+      tpl[1].submenu.splice(3, 0,
+        {
+          label: intl.formatMessage(menuItems.toggleMenuBar),
+          click(menuItem, browserWindow) {
+            const isMenuBarVisible = browserWindow.isMenuBarVisible();
+            browserWindow.setMenuBarVisibility(!isMenuBarVisible);
+
+            this.actions.settings.update({
+              type: 'app',
+              data: {
+                isMenuBarVisible,
+              },
+            });
+
+            debug(`Set menu bar visibility to "${isMenuBarVisible}"`);
+          },
+        },
+        {
+          type: 'separator',
+        },
+      );
+    }
 
     tpl.unshift({
       label: isMac ? app.getName() : intl.formatMessage(menuItems.file),
