@@ -549,11 +549,11 @@ export default class FranzMenu {
       },
     });
 
-    if (isMac || isLinux) {
+    if (isLinux) {
       tpl[1].submenu.splice(3, 0,
         {
           label: intl.formatMessage(menuItems.toggleMenuBar),
-          click(menuItem, browserWindow) {
+          click: (menuItem, browserWindow) => {
             const isMenuBarVisible = browserWindow.isMenuBarVisible();
             browserWindow.setMenuBarVisibility(!isMenuBarVisible);
 
