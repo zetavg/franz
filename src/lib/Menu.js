@@ -485,7 +485,7 @@ export default class FranzMenu {
     this.stores = stores;
     this.actions = actions;
 
-    autorun(this._build.bind(this));
+    // autorun(this._build.bind(this));
   }
 
   rebuild() {
@@ -497,7 +497,7 @@ export default class FranzMenu {
   }
 
   _build() {
-    // console.log(window.franz);
+    console.log('BUILDING MENU');
     const serviceTpl = Object.assign([], this.serviceTpl); // need to clone object so we don't modify computed (cached) object
 
     if (window.franz === undefined) {
@@ -672,6 +672,8 @@ export default class FranzMenu {
   }
 
   @computed get serviceTpl() {
+    console.log('BUILDING SERVICE MENU');
+
     const services = this.stores.services.allDisplayed;
 
     if (this.stores.user.isLoggedIn) {

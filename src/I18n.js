@@ -9,6 +9,10 @@ import UserStore from './stores/UserStore';
 
 @inject('stores') @observer
 export default class I18N extends Component {
+  componentDidMount() {
+    window.franz.menu.rebuild();
+  }
+
   componentDidUpdate() {
     window.franz.menu.rebuild();
   }
