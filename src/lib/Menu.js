@@ -1,5 +1,5 @@
 import { remote, shell } from 'electron';
-import { observable, autorun, computed } from 'mobx';
+import { observable, computed } from 'mobx';
 import { defineMessages } from 'react-intl';
 
 import { isMac, ctrlKey, cmdKey } from '../environment';
