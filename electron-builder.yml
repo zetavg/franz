@@ -4,6 +4,8 @@ directories:
 
 appId: "com.meetfranz.franz"
 
+asar: false
+
 compression: maximum
 
 mac:
