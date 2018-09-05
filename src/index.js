@@ -176,6 +176,9 @@ const createWindow = () => {
     minWidth: 600,
     minHeight: 500,
     titleBarStyle: isMac ? 'hidden' : '',
+    vibrancy: 'light',
+    transparent: true,
+    backgroundColor: '#80FFFFFF',
     frame: isLinux,
     // backgroundColor: !settings.get('darkMode') ? '#3498db' : '#1E1E1E',
     webPreferences: {

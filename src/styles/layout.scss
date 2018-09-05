@@ -63,8 +63,8 @@ html { overflow: hidden; }
 
 .sidebar {
   align-items: center;
-  background: $theme-gray-lightest;
-  box-shadow: 1px 0 10px rgba(0, 0, 0, .08);
+  background: rgba(246, 246, 246, .85);
+  border-right: 1px solid #dfdfdf;
   color: $theme-text-color;
   display: flex;
   flex-direction: column;
@@ -88,6 +88,20 @@ html { overflow: hidden; }
     padding: 7px 0;
     position: relative;
     width: $theme-sidebar-width;
+    color: $theme-gray-light;
+    opacity: 0;
+
+    &:hover {
+      color: darken($theme-gray-light, 10%);
+    }
+
+    &:active {
+      color: lighten($theme-gray-light, 10%);
+    }
+
+    &.is-muted {
+      color: $theme-brand-primary;
+    }
 
     &:hover,
     &:active { color: lighten($theme-gray-light, 10%); }
@@ -100,6 +114,12 @@ html { overflow: hidden; }
     overflow-y: scroll;
 
     &::-webkit-scrollbar { display: none; }
+  }
+}
+
+.sidebar:hover {
+  .sidebar__button {
+    opacity: .5;
   }
 }
 
