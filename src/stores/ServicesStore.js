@@ -304,6 +304,8 @@ export default class ServicesStore extends Store {
     statsEvent('activate-service', service.recipe.id);
 
     this._focusActiveService();
+
+    document.title = `Franz - ${service.name}`;
   }
 
   @action _blurActive() {
@@ -319,6 +321,7 @@ export default class ServicesStore extends Store {
       this.all[index].isActive = false;
     });
     this.allDisplayed[nextIndex].isActive = true;
+    document.title = `Franz - ${this.allDisplayed[nextIndex].name}`;
   }
 
   @action _setActivePrev() {
@@ -329,6 +332,7 @@ export default class ServicesStore extends Store {
       this.all[index].isActive = false;
     });
     this.allDisplayed[prevIndex].isActive = true;
+    document.title = `Franz - ${this.allDisplayed[prevIndex].name}`;
   }
 
   @action _setUnreadMessageCount({ serviceId, count }) {
