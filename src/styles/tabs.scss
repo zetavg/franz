@@ -24,9 +24,21 @@
   min-height: 50px;
   transition: background $theme-transition-time;
 
+  &::before {
+    z-index: 0;
+    position: absolute;
+    top: 23px;
+    left: 21px;
+    content: '';
+    width: 18px;
+    height: 18px;
+    border-radius: 100%;
+    background-color: white;
+  }
+
   &.is-active {
-    border-left: 4px solid $theme-brand-primary;
-    background: lighten($theme-brand-primary, 35%);
+    border-left: 4px solid transparent;
+    background: #dfdfdf;
 
     .tab-item__icon {
       margin-left: -4px;
@@ -54,11 +66,13 @@
   }
 
   .tab-item__icon {
+    z-index: 1;
     width: 30px;
     height: auto;
   }
 
   .tab-item__message-count {
+    z-index: 10;
     min-width: 17px;
     min-height: 17px;
     background: $theme-brand-danger;

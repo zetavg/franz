@@ -45,8 +45,9 @@ html {
   flex-direction: column;
   align-items: center;
   width: $theme-sidebar-width;
-  background: $theme-gray-lightest;
-  box-shadow: 1px 0 10px rgba(0,0,0,0.08);
+  background: #f6f6f6;
+  // box-shadow: 1px 0 10px rgba(0,0,0,0.08);
+  border-right: 1px solid #dfdfdf;
   z-index: 200;
   text-align: center;
   color: $theme-text-color;
@@ -67,6 +68,11 @@ html {
     font-size: 24px;
     position: relative;
     color: $theme-gray-light;
+    opacity: 0;
+
+    .sidebar:hover & {
+      opacity: 1;
+    }
 
     &:hover {
       color: darken($theme-gray-light, 10%);
