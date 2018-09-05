@@ -33,6 +33,7 @@ export default class ServiceWebview extends Component {
   componentDidMount() {
     autorun(() => {
       if (this.props.service.isActive) {
+        document.title = `Franz - ${this.props.service.name}`;
         this.setState({ forceRepaint: true });
         setTimeout(() => {
           this.setState({ forceRepaint: false });
