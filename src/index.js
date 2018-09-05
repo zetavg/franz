@@ -151,7 +151,7 @@ const createWindow = () => {
     minHeight: 500,
     titleBarStyle: isMac ? 'hidden' : '',
     frame: isLinux,
-    backgroundColor: !settings.get('darkMode') ? '#3498db' : '#1E1E1E',
+    // backgroundColor: !settings.get('darkMode') ? '#3498db' : '#1E1E1E',
     webPreferences: {
       nodeIntegration: true,
       webviewTag: true,
