@@ -32,10 +32,10 @@ export default class FranzTouchBar {
       this.stores.services.enabled.forEach(((service) => {
         buttons.push(new TouchBarButton({
           label: `${service.name}${service.unreadDirectMessageCount > 0
-            ? ' 🔴' : ''} ${service.unreadDirectMessageCount === 0
+            ? '°' : ''} ${service.unreadDirectMessageCount === 0
               && service.unreadIndirectMessageCount > 0
-            ? ' ⚪️' : ''}`,
-          backgroundColor: service.isActive ? '#3498DB' : null,
+            ? '°' : ''}`,
+          backgroundColor: service.isActive ? '#808080' : null,
           click: () => {
             this.actions.service.setActive({ serviceId: service.id });
           },
