@@ -7,6 +7,7 @@ import RecipeWebview from './lib/RecipeWebview';
 
 import Spellchecker from './spellchecker';
 import './notifications';
+import './service-patchs';
 
 const debug = require('debug')('Plugin');
 
