@@ -10,6 +10,7 @@ import spellchecker, { switchDict, disable as disableSpellchecker, getSpellcheck
 import { injectDarkModeStyle, isDarkModeStyleInjected, removeDarkModeStyle } from './darkmode';
 import contextMenu from './contextMenu';
 import './notifications';
+import './service-patchs';
 
 import { DEFAULT_APP_SETTINGS } from '../config';
 import { isDevMode } from '../environment';
