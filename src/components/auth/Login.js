@@ -11,10 +11,7 @@ import Button from '../ui/Button';
 import Link from '../ui/Link';
 import Infobox from '../ui/Infobox';
 
-
 import { globalError as globalErrorPropType } from '../../prop-types';
-
-// import Appear from '../ui/effects/Appear';
 
 const messages = defineMessages({
   headline: {
@@ -55,8 +52,7 @@ const messages = defineMessages({
   },
 });
 
-@observer
-export default class Login extends Component {
+export default @observer class Login extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     isSubmitting: PropTypes.bool.isRequired,
@@ -87,17 +83,17 @@ export default class Login extends Component {
     },
   }, this.context.intl);
 
+  emailField = null;
+
   submit(e) {
     e.preventDefault();
     this.form.submit({
       onSuccess: (form) => {
         this.props.onSubmit(form.values());
       },
-      onError: () => {},
+      onError: () => { },
     });
   }
-
-  emailField = null;
 
   render() {
     const { form } = this;

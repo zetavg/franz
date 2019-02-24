@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 
+import ErrorBoundary from '../util/ErrorBoundary';
 import { oneOrManyChildElements } from '../../prop-types';
 import Appear from '../ui/effects/Appear';
 
-@observer
-export default class SettingsLayout extends Component {
+export default @observer class SettingsLayout extends Component {
   static propTypes = {
     navigation: PropTypes.element.isRequired,
     children: oneOrManyChildElements.isRequired,
@@ -37,18 +37,22 @@ export default class SettingsLayout extends Component {
     return (
       <Appear transitionName="fadeIn-fast">
         <div className="settings-wrapper">
-          <button
-            className="settings-wrapper__action"
-            onClick={closeSettings}
-          />
-          <div className="settings franz-form">
-            {navigation}
-            {children}
+          <ErrorBoundary>
             <button
-              className="settings__close mdi mdi-close"
+              type="button"
+              className="settings-wrapper__action"
               onClick={closeSettings}
             />
-          </div>
+            <div className="settings franz-form">
+              {navigation}
+              {children}
+              <button
+                type="button"
+                className="settings__close mdi mdi-close"
+                onClick={closeSettings}
+              />
+            </div>
+          </ErrorBoundary>
         </div>
       </Appear>
     );

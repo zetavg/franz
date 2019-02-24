@@ -1,8 +1,7 @@
 import { remote } from 'electron';
 import { GA_ID } from '../config';
-// import { isDevMode } from '../environment';
 
-const debug = require('debug')('Analytics');
+const debug = require('debug')('Franz:Analytics');
 
 const { app } = remote;
 
@@ -36,7 +35,7 @@ export function gaPage(page) {
 export function gaEvent(category, action, label) {
   ga('send', 'event', category, action, label);
 
-  debug('GA track page', category, action);
+  debug('GA track event', category, action);
 }
 
 setTimeout(() => {

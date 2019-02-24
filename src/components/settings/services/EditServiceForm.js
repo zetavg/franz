@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { Link } from 'react-router';
@@ -14,6 +14,9 @@ import Input from '../../ui/Input';
 import Toggle from '../../ui/Toggle';
 import Button from '../../ui/Button';
 import ImageUpload from '../../ui/ImageUpload';
+import Select from '../../ui/Select';
+
+import PremiumFeatureContainer from '../../ui/PremiumFeatureContainer';
 
 const messages = defineMessages({
   saveService: {
@@ -92,10 +95,21 @@ const messages = defineMessages({
     id: 'settings.service.form.iconUpload',
     defaultMessage: '!!!Drop your image, or click here',
   },
+  headlineProxy: {
+    id: 'settings.service.form.proxy.headline',
+    defaultMessage: '!!!HTTP/HTTPS Proxy Settings',
+  },
+  proxyRestartInfo: {
+    id: 'settings.service.form.proxy.restartInfo',
+    defaultMessage: '!!!Please restart Franz after changing proxy Settings.',
+  },
+  proxyInfo: {
+    id: 'settings.service.form.proxy.info',
+    defaultMessage: '!!!Proxy settings will not be synchronized with the Franz servers.',
+  },
 });
 
-@observer
-export default class EditServiceForm extends Component {
+export default @observer class EditServiceForm extends Component {
   static propTypes = {
     recipe: PropTypes.instanceOf(Recipe).isRequired,
     service(props, propName) {
@@ -113,11 +127,15 @@ export default class EditServiceForm extends Component {
     onDelete: PropTypes.func.isRequired,
     isSaving: PropTypes.bool.isRequired,
     isDeleting: PropTypes.bool.isRequired,
+    isProxyFeatureEnabled: PropTypes.bool.isRequired,
+    isProxyPremiumFeature: PropTypes.bool.isRequired,
+    isSpellcheckerPremiumFeature: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
     service: {},
   };
+
   static contextTypes = {
     intl: intlShape,
   };
@@ -173,6 +191,9 @@ export default class EditServiceForm extends Component {
       isSaving,
       isDeleting,
       onDelete,
+      isProxyFeatureEnabled,
+      isProxyPremiumFeature,
+      isSpellcheckerPremiumFeature,
     } = this.props;
     const { intl } = this.context;
 
@@ -201,6 +222,8 @@ export default class EditServiceForm extends Component {
     } else if (recipe.hasHostedOption && service.customUrl) {
       activeTabIndex = 2;
     }
+
+    const requiresUserInput = !recipe.hasHostedOption && (recipe.hasTeamId || recipe.hasCustomUrl);
 
     return (
       <div className="settings__main">
@@ -255,14 +278,14 @@ export default class EditServiceForm extends Component {
                 {recipe.hasCustomUrl && (
                   <TabItem title={intl.formatMessage(messages.tabOnPremise)}>
                     {user.isPremium || recipe.author.find(a => a.email === user.email) ? (
-                      <div>
+                      <Fragment>
                         <Input field={form.$('customUrl')} />
                         {form.error === 'url-validation-error' && (
                           <p className="franz-form__error">
                             {intl.formatMessage(messages.customUrlValidationError, { name: recipe.name })}
                           </p>
                         )}
-                      </div>
+                      </Fragment>
                     ) : (
                       <div className="center premium-info">
                         <p>{intl.formatMessage(messages.customUrlPremiumInfo)}</p>
@@ -292,17 +315,20 @@ export default class EditServiceForm extends Component {
                   <h3>{intl.formatMessage(messages.headlineBadges)}</h3>
                   <Toggle field={form.$('isBadgeEnabled')} />
                   {recipe.hasIndirectMessages && form.$('isBadgeEnabled').value && (
-                    <div>
+                    <Fragment>
                       <Toggle field={form.$('isIndirectMessageBadgeEnabled')} />
                       <p className="settings__help">
                         {intl.formatMessage(messages.indirectMessageInfo)}
                       </p>
-                    </div>
+                    </Fragment>
                   )}
                 </div>
 
                 <div className="settings__settings-group">
                   <h3>{intl.formatMessage(messages.headlineGeneral)}</h3>
+                  {recipe.hasDarkMode && (
+                    <Toggle field={form.$('isDarkModeEnabled')} />
+                  )}
                   <Toggle field={form.$('isEnabled')} />
                 </div>
               </div>
@@ -314,6 +340,52 @@ export default class EditServiceForm extends Component {
                 />
               </div>
             </div>
+
+            <PremiumFeatureContainer condition={isSpellcheckerPremiumFeature}>
+              <div className="settings__settings-group">
+                <Select field={form.$('spellcheckerLanguage')} />
+              </div>
+            </PremiumFeatureContainer>
+
+            {isProxyFeatureEnabled && (
+              <PremiumFeatureContainer condition={isProxyPremiumFeature}>
+                <div className="settings__settings-group">
+                  <h3>
+                    {intl.formatMessage(messages.headlineProxy)}
+                    <span className="badge badge--success">beta</span>
+                  </h3>
+                  <Toggle field={form.$('proxy.isEnabled')} />
+                  {form.$('proxy.isEnabled').value && (
+                    <Fragment>
+                      <div className="grid">
+                        <div className="grid__row">
+                          <Input field={form.$('proxy.host')} className="proxyHost" />
+                          <Input field={form.$('proxy.port')} />
+                        </div>
+                      </div>
+                      <div className="grid">
+                        <div className="grid__row">
+                          <Input field={form.$('proxy.user')} />
+                          <Input
+                            field={form.$('proxy.password')}
+                            showPasswordToggle
+                          />
+                        </div>
+                      </div>
+                      <p>
+                        <span className="mdi mdi-information" />
+                        {intl.formatMessage(messages.proxyRestartInfo)}
+                      </p>
+                      <p>
+                        <span className="mdi mdi-information" />
+                        {intl.formatMessage(messages.proxyInfo)}
+                      </p>
+                    </Fragment>
+                  )}
+                </div>
+              </PremiumFeatureContainer>
+            )}
+
             {recipe.message && (
               <p className="settings__message">
                 <span className="mdi mdi-information" />
@@ -340,6 +412,7 @@ export default class EditServiceForm extends Component {
               type="submit"
               label={intl.formatMessage(messages.saveService)}
               htmlForm="form"
+              disabled={action !== 'edit' && form.isPristine && requiresUserInput}
             />
           )}
         </div>

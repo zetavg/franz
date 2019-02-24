@@ -3,19 +3,30 @@ import gulp from 'gulp';
 import babel from 'gulp-babel';
 import sass from 'gulp-sass';
 import server from 'gulp-server-livereload';
-import del from 'del';
 import { exec } from 'child_process';
 import dotenv from 'dotenv';
 import sassVariables from 'gulp-sass-variables';
+import { moveSync, removeSync } from 'fs-extra';
+import kebabCase from 'kebab-case';
+import hexRgb from 'hex-rgb';
+import path from 'path';
 
 import config from './package.json';
 
+import * as rawStyleConfig from './src/theme/default/legacy.js';
+
 dotenv.config();
+
+const styleConfig = Object.keys(rawStyleConfig).map((key) => {
+  const isHex = /^#[0-9A-F]{6}$/i.test(rawStyleConfig[key]);
+  return ({ [`$raw_${kebabCase(key)}`]: isHex ? hexRgb(rawStyleConfig[key], { format: 'array' }).splice(0, 3).join(',') : rawStyleConfig[key] });
+});
 
 const paths = {
   src: 'src',
   dest: 'build',
   tmp: '.tmp',
+  dictionaries: 'dictionaries',
   package: `out/${config.version}`,
   html: {
     src: 'src/**/*.html',
@@ -35,6 +46,7 @@ const paths = {
 };
 
 function _shell(cmd, cb) {
+  console.log('executing', cmd);
   exec(cmd, {
     cwd: paths.dest,
   }, (error, stdout, stderr) => {
@@ -49,7 +61,12 @@ function _shell(cmd, cb) {
   });
 }
 
-const clean = () => del([paths.tmp, paths.dest]);
+const clean = (done) => {
+  removeSync(paths.tmp);
+  removeSync(paths.dest);
+
+  done();
+};
 export { clean };
 
 export function mvSrc() {
@@ -59,7 +76,8 @@ export function mvSrc() {
       `${paths.src}/*/**`,
       `!${paths.scripts.watch}`,
       `!${paths.src}/styles/**`,
-    ], { since: gulp.lastRun(mvSrc) })
+    ], { since: gulp.lastRun(mvSrc) },
+  )
     .pipe(gulp.dest(paths.dest));
 }
 
@@ -67,7 +85,8 @@ export function mvPackageJson() {
   return gulp.src(
     [
       './package.json',
-    ])
+    ],
+  )
     .pipe(gulp.dest(paths.dest));
 }
 
@@ -78,9 +97,9 @@ export function html() {
 
 export function styles() {
   return gulp.src(paths.styles.src)
-    .pipe(sassVariables({
+    .pipe(sassVariables(Object.assign({
       $env: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-    }))
+    }, ...styleConfig)))
     .pipe(sass({
       includePaths: [
         './node_modules',
@@ -118,6 +137,24 @@ export function webserver() {
     }));
 }
 
+export function dictionaries(done) {
+  const { SPELLCHECKER_LOCALES } = require('./build/i18n/languages');
+
+  let packages = '';
+  Object.keys(SPELLCHECKER_LOCALES).forEach((key) => { packages = `${packages} hunspell-dict-${key}`; });
+
+  _shell(`npm install --prefix ${path.join(__dirname, 'temp')} ${packages}`, () => {
+    moveSync(
+      path.join(__dirname, 'temp', 'node_modules'),
+      path.join(__dirname, 'build', paths.dictionaries),
+    );
+
+    removeSync(path.join(__dirname, 'temp'));
+
+    done();
+  });
+}
+
 export function sign(done) {
   _shell(`codesign --verbose=4 --deep --strict --force --sign "${process.env.SIGNING_IDENTITY}" "${__dirname}/node_modules/electron/dist/Electron.app"`, done);
 }
@@ -126,6 +163,7 @@ const build = gulp.series(
   clean,
   gulp.parallel(mvSrc, mvPackageJson),
   gulp.parallel(html, scripts, styles),
+  dictionaries,
 );
 export { build };
 

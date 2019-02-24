@@ -1,5 +1,5 @@
 import { remote } from 'electron';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { defineMessages, intlShape } from 'react-intl';
@@ -8,6 +8,7 @@ import Form from '../../../lib/Form';
 import Button from '../../ui/Button';
 import Toggle from '../../ui/Toggle';
 import Select from '../../ui/Select';
+import PremiumFeatureContainer from '../../ui/PremiumFeatureContainer';
 
 import { FRANZ_TRANSLATION } from '../../../config';
 
@@ -82,8 +83,7 @@ const messages = defineMessages({
   },
 });
 
-@observer
-export default class EditSettingsForm extends Component {
+export default @observer class EditSettingsForm extends Component {
   static propTypes = {
     checkForUpdates: PropTypes.func.isRequired,
     installUpdate: PropTypes.func.isRequired,
@@ -96,6 +96,7 @@ export default class EditSettingsForm extends Component {
     isClearingAllCache: PropTypes.bool.isRequired,
     onClearAllCache: PropTypes.func.isRequired,
     cacheSize: PropTypes.string.isRequired,
+    isSpellcheckerPremiumFeature: PropTypes.bool.isRequired,
   };
 
   static contextTypes = {
@@ -125,6 +126,7 @@ export default class EditSettingsForm extends Component {
       isClearingAllCache,
       onClearAllCache,
       cacheSize,
+      isSpellcheckerPremiumFeature,
     } = this.props;
     const { intl } = this.context;
 
@@ -161,24 +163,37 @@ export default class EditSettingsForm extends Component {
             <h2 id="apperance">{intl.formatMessage(messages.headlineAppearance)}</h2>
             <Toggle field={form.$('showDisabledServices')} />
             <Toggle field={form.$('showMessageBadgeWhenMuted')} />
+            <Toggle field={form.$('darkMode')} />
 
             {/* Language */}
             <h2 id="language">{intl.formatMessage(messages.headlineLanguage)}</h2>
             <Select field={form.$('locale')} showLabel={false} />
+            <PremiumFeatureContainer
+              condition={isSpellcheckerPremiumFeature}
+            >
+              <Fragment>
+                <Toggle
+                  field={form.$('enableSpellchecking')}
+                />
+                {form.$('enableSpellchecking').value && (
+                  <Select field={form.$('spellcheckerLanguage')} />
+                )}
+              </Fragment>
+            </PremiumFeatureContainer>
             <a
               href={FRANZ_TRANSLATION}
               target="_blank"
               className="link"
             >
-              {intl.formatMessage(messages.translationHelp)} <i className="mdi mdi-open-in-new" />
+              {intl.formatMessage(messages.translationHelp)}
+              {' '}
+              <i className="mdi mdi-open-in-new" />
             </a>
 
             {/* Advanced */}
             <h2 id="advanced">{intl.formatMessage(messages.headlineAdvanced)}</h2>
-            <Toggle field={form.$('enableSpellchecking')} />
             <Toggle field={form.$('enableGPUAcceleration')} />
             <p className="settings__help">{intl.formatMessage(messages.enableGPUAccelerationInfo)}</p>
-            {/* <Select field={form.$('spellcheckingLanguage')} /> */}
             <div className="settings__settings-group">
               <h3>
                 {intl.formatMessage(messages.subheadlineCache)}
@@ -220,7 +235,9 @@ export default class EditSettingsForm extends Component {
             )}
             <br />
             <Toggle field={form.$('beta')} />
-            {intl.formatMessage(messages.currentVersion)} {remote.app.getVersion()}
+            {intl.formatMessage(messages.currentVersion)}
+            {' '}
+            {remote.app.getVersion()}
           </form>
         </div>
       </div>

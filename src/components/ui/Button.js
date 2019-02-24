@@ -4,8 +4,7 @@ import { observer } from 'mobx-react';
 import Loader from 'react-loader';
 import classnames from 'classnames';
 
-@observer
-export default class Button extends Component {
+export default @observer class Button extends Component {
   static propTypes = {
     className: PropTypes.string,
     label: PropTypes.string.isRequired,
@@ -63,6 +62,8 @@ export default class Button extends Component {
     }
 
     return (
+      // disabling rule as button has type defined in `buttonProps`
+      /* eslint-disable react/button-has-type */
       <button {...buttonProps}>
         <Loader
           loaded={loaded}
@@ -73,6 +74,7 @@ export default class Button extends Component {
         />
         {label}
       </button>
+      /* eslint-enable react/button-has-type */
     );
   }
 }

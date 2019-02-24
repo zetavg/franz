@@ -9,9 +9,9 @@ import ServiceStore from '../../stores/ServicesStore';
 import { gaPage } from '../../lib/analytics';
 
 import ServicesDashboard from '../../components/settings/services/ServicesDashboard';
+import ErrorBoundary from '../../components/util/ErrorBoundary';
 
-@inject('stores', 'actions') @observer
-export default class ServicesScreen extends Component {
+export default @inject('stores', 'actions') @observer class ServicesScreen extends Component {
   componentDidMount() {
     gaPage('Settings/Service Dashboard');
   }
@@ -41,20 +41,22 @@ export default class ServicesScreen extends Component {
     }
 
     return (
-      <ServicesDashboard
-        user={user.data}
-        services={allServices}
-        status={services.actionStatus}
-        deleteService={() => this.deleteService()}
-        toggleService={toggleService}
-        isLoading={isLoading}
-        filterServices={filter}
-        resetFilter={resetFilter}
-        goTo={router.push}
-        servicesRequestFailed={services.allServicesRequest.wasExecuted && services.allServicesRequest.isError}
-        retryServicesRequest={() => services.allServicesRequest.reload()}
-        searchNeedle={services.filterNeedle}
-      />
+      <ErrorBoundary>
+        <ServicesDashboard
+          user={user.data}
+          services={allServices}
+          status={services.actionStatus}
+          deleteService={() => this.deleteService()}
+          toggleService={toggleService}
+          isLoading={isLoading}
+          filterServices={filter}
+          resetFilter={resetFilter}
+          goTo={router.push}
+          servicesRequestFailed={services.allServicesRequest.wasExecuted && services.allServicesRequest.isError}
+          retryServicesRequest={() => services.allServicesRequest.reload()}
+          searchNeedle={services.filterNeedle}
+        />
+      </ErrorBoundary>
     );
   }
 }

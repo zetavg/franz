@@ -17,8 +17,7 @@ const messages = defineMessages({
   },
 });
 
-@observer
-export default class SubscriptionPopup extends Component {
+export default @observer class SubscriptionPopup extends Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
     closeWindow: PropTypes.func.isRequired,
@@ -47,7 +46,9 @@ export default class SubscriptionPopup extends Component {
   }
 
   render() {
-    const { url, closeWindow, completeCheck, isCompleted } = this.props;
+    const {
+      url, closeWindow, completeCheck, isCompleted,
+    } = this.props;
     const { intl } = this.context;
 
     return (

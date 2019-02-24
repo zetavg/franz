@@ -4,8 +4,7 @@ import { observer } from 'mobx-react';
 import classnames from 'classnames';
 import Loader from 'react-loader';
 
-@observer
-export default class Infobox extends Component {
+export default @observer class Infobox extends Component {
   static propTypes = {
     children: PropTypes.any.isRequired, // eslint-disable-line
     icon: PropTypes.string,
@@ -62,6 +61,7 @@ export default class Infobox extends Component {
           <button
             className="infobox__cta"
             onClick={ctaOnClick}
+            type="button"
           >
             <Loader
               loaded={!ctaLoading}
@@ -75,6 +75,7 @@ export default class Infobox extends Component {
         )}
         {dismissable && (
           <button
+            type="button"
             onClick={() => this.setState({
               dismissed: true,
             })}

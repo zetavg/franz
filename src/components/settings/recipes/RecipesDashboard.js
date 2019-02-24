@@ -46,8 +46,7 @@ const messages = defineMessages({
   },
 });
 
-@observer
-export default class RecipesDashboard extends Component {
+export default @observer class RecipesDashboard extends Component {
   static propTypes = {
     recipes: MobxPropTypes.arrayOrObservableArray.isRequired,
     isLoading: PropTypes.bool.isRequired,
@@ -130,11 +129,17 @@ export default class RecipesDashboard extends Component {
                 activeClassName={`${!searchNeedle ? 'badge--primary' : ''}`}
                 onClick={() => resetSearch()}
               >
-                {intl.formatMessage(messages.devRecipes)} ({devRecipesCount})
+                {intl.formatMessage(messages.devRecipes)}
+                {' '}
+(
+                {devRecipesCount}
+)
               </Link>
             )}
             <a href={FRANZ_SERVICE_REQUEST} target="_blank" className="link recipes__service-request">
-              {intl.formatMessage(messages.missingService)} <i className="mdi mdi-open-in-new" />
+              {intl.formatMessage(messages.missingService)}
+              {' '}
+              <i className="mdi mdi-open-in-new" />
             </a>
           </div>
           {/* )} */}

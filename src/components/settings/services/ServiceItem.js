@@ -22,12 +22,12 @@ const messages = defineMessages({
   },
 });
 
-@observer
-export default class ServiceItem extends Component {
+export default @observer class ServiceItem extends Component {
   static propTypes = {
     service: PropTypes.instanceOf(ServiceModel).isRequired,
     goToServiceForm: PropTypes.func.isRequired,
   };
+
   static contextTypes = {
     intl: intlShape,
   };

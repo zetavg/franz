@@ -4,8 +4,7 @@ import { observer } from 'mobx-react';
 import { Field } from 'mobx-react-form';
 import classnames from 'classnames';
 
-@observer
-export default class Radio extends Component {
+export default @observer class Radio extends Component {
   static propTypes = {
     field: PropTypes.instanceOf(Field).isRequired,
     className: PropTypes.string,
@@ -19,6 +18,8 @@ export default class Radio extends Component {
     showLabel: true,
   };
 
+  inputElement = null;
+
   componentDidMount() {
     if (this.props.focus) {
       this.focus();
@@ -28,8 +29,6 @@ export default class Radio extends Component {
   focus() {
     this.inputElement.focus();
   }
-
-  inputElement = null;
 
   render() {
     const {

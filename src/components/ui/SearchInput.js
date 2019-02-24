@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import classnames from 'classnames';
-import uuidv1 from 'uuid/v1';
 import { debounce } from 'lodash';
 
-@observer
-export default class SearchInput extends Component {
+export default @observer class SearchInput extends Component {
   static propTypes = {
     value: PropTypes.string,
     placeholder: PropTypes.string,
@@ -23,13 +21,15 @@ export default class SearchInput extends Component {
     value: '',
     placeholder: '',
     className: '',
-    name: uuidv1(),
+    name: 'searchInput',
     throttle: false,
     throttleDelay: 250,
     onChange: () => null,
     onReset: () => null,
     autoFocus: false,
   }
+
+  input = null;
 
   constructor(props) {
     super(props);
@@ -75,8 +75,6 @@ export default class SearchInput extends Component {
     onReset();
   }
 
-  input = null;
-
   render() {
     const { className, name, placeholder } = this.props;
     const { value } = this.state;
@@ -91,15 +89,17 @@ export default class SearchInput extends Component {
         <label
           htmlFor={name}
           className="mdi mdi-magnify"
-        />
-        <input
-          name={name}
-          type="text"
-          placeholder={placeholder}
-          value={value}
-          onChange={e => this.onChange(e)}
-          ref={(ref) => { this.input = ref; }}
-        />
+        >
+          <input
+            name={name}
+            id={name}
+            type="text"
+            placeholder={placeholder}
+            value={value}
+            onChange={e => this.onChange(e)}
+            ref={(ref) => { this.input = ref; }}
+          />
+        </label>
         {value.length > 0 && (
           <span
             className="mdi mdi-close-circle-outline"

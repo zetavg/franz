@@ -6,6 +6,8 @@ import { defineMessages, intlShape } from 'react-intl';
 import UserStore from '../../stores/UserStore';
 import Form from '../../lib/Form';
 import EditUserForm from '../../components/settings/user/EditUserForm';
+import ErrorBoundary from '../../components/util/ErrorBoundary';
+
 import { required, email, minLength } from '../../helpers/validation-helpers';
 import { gaPage } from '../../lib/analytics';
 
@@ -50,8 +52,7 @@ const messages = defineMessages({
   },
 });
 
-@inject('stores', 'actions') @observer
-export default class EditUserScreen extends Component {
+export default @inject('stores', 'actions') @observer class EditUserScreen extends Component {
   static contextTypes = {
     intl: intlShape,
   };
@@ -141,13 +142,15 @@ export default class EditUserScreen extends Component {
     const form = this.prepareForm(user.data);
 
     return (
-      <EditUserForm
-        // user={user.data}
-        status={user.actionStatus}
-        form={form}
-        isSaving={user.updateUserInfoRequest.isExecuting}
-        onSubmit={d => this.onSubmit(d)}
-      />
+      <ErrorBoundary>
+        <EditUserForm
+          // user={user.data}
+          status={user.actionStatus}
+          form={form}
+          isSaving={user.updateUserInfoRequest.isExecuting}
+          onSubmit={d => this.onSubmit(d)}
+        />
+      </ErrorBoundary>
     );
   }
 }

@@ -26,8 +26,7 @@ const messages = defineMessages({
   },
 });
 
-@observer
-export default class Sidebar extends Component {
+export default @observer class Sidebar extends Component {
   static propTypes = {
     openSettings: PropTypes.func.isRequired,
     toggleMuteApp: PropTypes.func.isRequired,
@@ -66,6 +65,7 @@ export default class Sidebar extends Component {
           disableToolTip={() => this.disableToolTip()}
         />
         <button
+          type="button"
           onClick={toggleMuteApp}
           className={`sidebar__button sidebar__button--audio ${isAppMuted ? 'is-muted' : ''}`}
           data-tip={`${intl.formatMessage(isAppMuted ? messages.unmute : messages.mute)} (${ctrlKey}+Shift+M)`}
@@ -73,6 +73,7 @@ export default class Sidebar extends Component {
           <i className={`mdi mdi-bell${isAppMuted ? '-off' : ''}`} />
         </button>
         <button
+          type="button"
           onClick={() => openSettings({ path: 'recipes' })}
           className="sidebar__button sidebar__button--new-service"
           data-tip={`${intl.formatMessage(messages.addNewService)} (${ctrlKey}+N)`}
@@ -80,6 +81,7 @@ export default class Sidebar extends Component {
           <i className="mdi mdi-plus-box" />
         </button>
         <button
+          type="button"
           onClick={() => openSettings({ path: 'app' })}
           className="sidebar__button sidebar__button--settings"
           data-tip={`${intl.formatMessage(messages.settings)} (${ctrlKey}+,)`}

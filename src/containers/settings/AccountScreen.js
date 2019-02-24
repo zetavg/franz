@@ -9,11 +9,19 @@ import AppStore from '../../stores/AppStore';
 import { gaPage } from '../../lib/analytics';
 
 import AccountDashboard from '../../components/settings/account/AccountDashboard';
+import ErrorBoundary from '../../components/util/ErrorBoundary';
 
 const { BrowserWindow } = remote;
 
-@inject('stores', 'actions') @observer
-export default class AccountScreen extends Component {
+export default @inject('stores', 'actions') @observer class AccountScreen extends Component {
+  componentWillMount() {
+    const {
+      user,
+    } = this.props.stores;
+
+    user.getUserInfoRequest.invalidate({ immediately: true });
+  }
+
   componentDidMount() {
     gaPage('Settings/Account Dashboard');
   }
@@ -68,22 +76,24 @@ export default class AccountScreen extends Component {
     const isLoadingPlans = payment.plansRequest.isExecuting;
 
     return (
-      <AccountDashboard
-        user={user.data}
-        orders={payment.orders}
-        isLoading={isLoadingUserInfo}
-        isLoadingOrdersInfo={isLoadingOrdersInfo}
-        isLoadingPlans={isLoadingPlans}
-        userInfoRequestFailed={user.getUserInfoRequest.wasExecuted && user.getUserInfoRequest.isError}
-        retryUserInfoRequest={() => this.reloadData()}
-        isCreatingPaymentDashboardUrl={payment.createDashboardUrlRequest.isExecuting}
-        openDashboard={price => this.handlePaymentDashboard(price)}
-        openExternalUrl={url => openExternalUrl({ url })}
-        onCloseSubscriptionWindow={() => this.onCloseWindow()}
-        deleteAccount={userActions.delete}
-        isLoadingDeleteAccount={user.deleteAccountRequest.isExecuting}
-        isDeleteAccountSuccessful={user.deleteAccountRequest.wasExecuted && !user.deleteAccountRequest.isError}
-      />
+      <ErrorBoundary>
+        <AccountDashboard
+          user={user.data}
+          orders={payment.orders}
+          isLoading={isLoadingUserInfo}
+          isLoadingOrdersInfo={isLoadingOrdersInfo}
+          isLoadingPlans={isLoadingPlans}
+          userInfoRequestFailed={user.getUserInfoRequest.wasExecuted && user.getUserInfoRequest.isError}
+          retryUserInfoRequest={() => this.reloadData()}
+          isCreatingPaymentDashboardUrl={payment.createDashboardUrlRequest.isExecuting}
+          openDashboard={price => this.handlePaymentDashboard(price)}
+          openExternalUrl={url => openExternalUrl({ url })}
+          onCloseSubscriptionWindow={() => this.onCloseWindow()}
+          deleteAccount={userActions.delete}
+          isLoadingDeleteAccount={user.deleteAccountRequest.isExecuting}
+          isDeleteAccountSuccessful={user.deleteAccountRequest.wasExecuted && !user.deleteAccountRequest.isError}
+        />
+      </ErrorBoundary>
     );
   }
 }

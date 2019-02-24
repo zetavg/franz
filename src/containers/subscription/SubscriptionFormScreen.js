@@ -9,11 +9,10 @@ import SubscriptionForm from '../../components/subscription/SubscriptionForm';
 
 const { BrowserWindow } = remote;
 
-@inject('stores', 'actions') @observer
-export default class SubscriptionFormScreen extends Component {
+export default @inject('stores', 'actions') @observer class SubscriptionFormScreen extends Component {
   static propTypes = {
     onCloseWindow: PropTypes.func,
-    content: PropTypes.oneOrManyChildElements,
+    content: PropTypes.node,
     showSkipOption: PropTypes.bool,
     skipAction: PropTypes.func,
     skipButtonLabel: PropTypes.string,
@@ -80,7 +79,6 @@ export default class SubscriptionFormScreen extends Component {
     return (
       <SubscriptionForm
         plan={stores.payment.plan}
-        // form={this.prepareForm(stores.payment.plan)}
         isLoading={stores.payment.plansRequest.isExecuting}
         retryPlanRequest={() => stores.payment.plansRequest.reload()}
         isCreatingHostedPage={stores.payment.createHostedPageRequest.isExecuting}

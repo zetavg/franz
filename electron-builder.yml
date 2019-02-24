@@ -42,3 +42,7 @@ nsis:
 protocols: 
   name: Franz
   schemes: [franz] 
+
+asarUnpack: 
+  - ./dictionaries
+  - ./assets/images/taskbar
