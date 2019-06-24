@@ -34,6 +34,7 @@ import {
   DEFAULT_WINDOW_OPTIONS,
 } from './config';
 import { asarPath } from './helpers/asar-helpers';
+import { isValidExternalURL } from './helpers/url-helpers';
 /* eslint-enable import/first */
 
 const debug = require('debug')('Franz:App');
@@ -71,7 +72,10 @@ if (!gotTheLock) {
   app.on('second-instance', (event, argv) => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
       mainWindow.focus();
 
       if (isWindows) {
@@ -101,6 +105,35 @@ if (!gotTheLock) {
     }
   });
 }
+// const isSecondInstance = app.makeSingleInstance((argv) => {
+//   if (mainWindow) {
+//     if (mainWindow.isMinimized()) mainWindow.restore();
+//     mainWindow.focus();
+
+//     if (process.platform === 'win32') {
+//       // Keep only command line / deep linked arguments
+//       const url = argv.slice(1);
+
+//       if (url) {
+//         handleDeepLink(mainWindow, url.toString());
+//       }
+//     }
+//   }
+
+//   if (argv.includes('--reset-window')) {
+//     // Needs to be delayed to not interfere with mainWindow.restore();
+//     setTimeout(() => {
+//       debug('Resetting windows via Task');
+//       mainWindow.setPosition(DEFAULT_WINDOW_OPTIONS.x + 100, DEFAULT_WINDOW_OPTIONS.y + 100);
+//       mainWindow.setSize(DEFAULT_WINDOW_OPTIONS.width, DEFAULT_WINDOW_OPTIONS.height);
+//     }, 1);
+//   }
+// });
+
+// if (isSecondInstance) {
+//   console.log('An instance of Franz is already running. Exiting...');
+//   app.exit();
+// }
 
 // Fix Unity indicator issue
 // https://github.com/electron/electron/issues/9046
@@ -147,6 +180,7 @@ const createWindow = () => {
     backgroundColor: !settings.get('darkMode') ? '#3498db' : '#1E1E1E',
     webPreferences: {
       nodeIntegration: true,
+      webviewTag: true,
     },
   });
 
@@ -194,19 +228,23 @@ const createWindow = () => {
 
   // Emitted when the window is closed.
   mainWindow.on('close', (e) => {
+    debug('Window: close window');
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     if (!willQuitApp && (settings.get('runInBackground') === undefined || settings.get('runInBackground'))) {
       e.preventDefault();
       if (isWindows) {
+        debug('Window: minimize');
         mainWindow.minimize();
-      } else {
-        mainWindow.hide();
-      }
 
-      if (isWindows) {
-        mainWindow.setSkipTaskbar(true);
+        if (settings.get('minimizeToSystemTray')) {
+          debug('Skip taskbar: true');
+          mainWindow.setSkipTaskbar(true);
+        }
+      } else {
+        debug('Window: hide');
+        mainWindow.hide();
       }
     } else {
       app.quit();
@@ -219,32 +257,39 @@ const createWindow = () => {
     app.wasMaximized = app.isMaximized;
 
     if (settings.get('minimizeToSystemTray')) {
+      debug('Skip taskbar: true');
       mainWindow.setSkipTaskbar(true);
       trayIcon.show();
     }
   });
 
   mainWindow.on('maximize', () => {
+    debug('Window: maximize');
     app.isMaximized = true;
   });
 
   mainWindow.on('unmaximize', () => {
+    debug('Window: unmaximize');
     app.isMaximized = false;
   });
 
   mainWindow.on('restore', () => {
+    debug('Window: restore');
     mainWindow.setSkipTaskbar(false);
 
     if (app.wasMaximized) {
+      debug('Window: was maximized before, maximize window');
       mainWindow.maximize();
     }
 
     if (!settings.get('enableSystemTray')) {
+      debug('Tray: hiding tray icon');
       trayIcon.hide();
     }
   });
 
   mainWindow.on('show', () => {
+    debug('Skip taskbar: false');
     mainWindow.setSkipTaskbar(false);
   });
 
@@ -252,10 +297,28 @@ const createWindow = () => {
   app.isMaximized = mainWindow.isMaximized();
 
   mainWindow.webContents.on('new-window', (e, url) => {
+    debug('Open url', url);
     e.preventDefault();
-    shell.openExternal(url);
+
+    if (isValidExternalURL(url)) {
+      shell.openExternal(url);
+    }
   });
 };
+
+// Allow passing command line parameters/switches to electron
+// https://electronjs.org/docs/api/chrome-command-line-switches
+// used for Kerberos support
+// Usage e.g. MACOS
+// $ Franz.app/Contents/MacOS/Franz --auth-server-whitelist *.mydomain.com --auth-negotiate-delegate-whitelist *.mydomain.com
+const argv = require('minimist')(process.argv.slice(1));
+
+if (argv['auth-server-whitelist']) {
+  app.commandLine.appendSwitch('auth-server-whitelist', argv['auth-server-whitelist']);
+}
+if (argv['auth-negotiate-delegate-whitelist']) {
+  app.commandLine.appendSwitch('auth-negotiate-delegate-whitelist', argv['auth-negotiate-delegate-whitelist']);
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -291,18 +354,26 @@ app.on('ready', () => {
 // TODO: rewrite to handle multiple login calls
 const noop = () => null;
 let authCallback = noop;
+
 app.on('login', (event, webContents, request, authInfo, callback) => {
   authCallback = callback;
   debug('browser login event', authInfo);
   event.preventDefault();
+
   if (authInfo.isProxy && authInfo.scheme === 'basic') {
+    debug('Sending service echo ping');
     webContents.send('get-service-id');
 
     ipcMain.once('service-id', (e, id) => {
       debug('Received service id', id);
 
       const ps = proxySettings.get(id);
-      callback(ps.user, ps.password);
+      if (ps) {
+        debug('Sending proxy auth callback for service', id);
+        callback(ps.user, ps.password);
+      } else {
+        debug('No proxy auth config found for', id);
+      }
     });
   } else if (authInfo.scheme === 'basic') {
     debug('basic auth handler', authInfo);
@@ -331,7 +402,10 @@ app.on('window-all-closed', () => {
   // to stay active until the user quits explicitly with Cmd + Q
   if (settings.get('runInBackground') === undefined
     || settings.get('runInBackground')) {
+    debug('Window: all windows closed, quit app');
     app.quit();
+  } else {
+    debug('Window: don\'t quit app');
   }
 });
 

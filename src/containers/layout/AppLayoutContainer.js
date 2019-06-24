@@ -20,6 +20,9 @@ import Services from '../../components/services/content/Services';
 import AppLoader from '../../components/ui/AppLoader';
 
 import { state as delayAppState } from '../../features/delayApp';
+import { workspaceActions } from '../../features/workspaces/actions';
+import WorkspaceDrawer from '../../features/workspaces/components/WorkspaceDrawer';
+import { workspaceStore } from '../../features/workspaces';
 
 export default @inject('stores', 'actions') @observer class AppLayoutContainer extends Component {
   static defaultProps = {
@@ -42,6 +45,7 @@ export default @inject('stores', 'actions') @observer class AppLayoutContainer e
       setActive,
       handleIPCMessage,
       setWebviewReference,
+      detachService,
       openWindow,
       reorder,
       reload,
@@ -81,6 +85,15 @@ export default @inject('stores', 'actions') @observer class AppLayoutContainer e
       );
     }
 
+    const workspacesDrawer = (
+      <WorkspaceDrawer
+        getServicesForWorkspace={workspace => (
+          workspace ? workspaceStore.getWorkspaceServices(workspace).map(s => s.name) : services.all.map(s => s.name)
+        )}
+        onUpgradeAccountClick={() => openSettings({ path: 'user' })}
+      />
+    );
+
     const sidebar = (
       <Sidebar
         services={services.allDisplayed}
@@ -95,6 +108,8 @@ export default @inject('stores', 'actions') @observer class AppLayoutContainer e
         deleteService={deleteService}
         updateService={updateService}
         toggleMuteApp={toggleMuteApp}
+        toggleWorkspaceDrawer={workspaceActions.toggleWorkspaceDrawer}
+        isWorkspaceDrawerOpen={workspaceStore.isWorkspaceDrawerOpen}
         showMessageBadgeWhenMutedSetting={settings.all.app.showMessageBadgeWhenMuted}
         showMessageBadgesEvenWhenMuted={ui.showMessageBadgesEvenWhenMuted}
       />
@@ -105,6 +120,7 @@ export default @inject('stores', 'actions') @observer class AppLayoutContainer e
         services={services.allDisplayedUnordered}
         handleIPCMessage={handleIPCMessage}
         setWebviewReference={setWebviewReference}
+        detachService={detachService}
         openWindow={openWindow}
         reload={reload}
         openSettings={openSettings}
@@ -119,7 +135,9 @@ export default @inject('stores', 'actions') @observer class AppLayoutContainer e
           isOnline={app.isOnline}
           showServicesUpdatedInfoBar={ui.showServicesUpdatedInfoBar}
           appUpdateIsDownloaded={app.updateStatus === app.updateStatusTypes.DOWNLOADED}
+          nextAppReleaseVersion={app.nextAppReleaseVersion}
           sidebar={sidebar}
+          workspacesDrawer={workspacesDrawer}
           services={servicesContainer}
           news={news.latest}
           removeNewsItem={hide}
@@ -160,6 +178,7 @@ AppLayoutContainer.wrappedComponent.propTypes = {
       toggleAudio: PropTypes.func.isRequired,
       handleIPCMessage: PropTypes.func.isRequired,
       setWebviewReference: PropTypes.func.isRequired,
+      detachService: PropTypes.func.isRequired,
       openWindow: PropTypes.func.isRequired,
       reloadUpdatedServices: PropTypes.func.isRequired,
       updateService: PropTypes.func.isRequired,

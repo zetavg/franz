@@ -1,8 +1,81 @@
-# [5.0.0](https://github.com/meetfranz/franz/compare/5.0.0-beta.24...5.0.0) (2019-02-15)
+# [5.2.0-beta.2](https://github.com/meetfranz/franz/compare/v5.2.0-beta.1...v5.2.0-beta.2) (2019-06-12)
+
+
+### Bug Fixes
+
+* **Recipes:** Fix recipe install when directly accessing recipe ([eba50bc](https://github.com/meetfranz/franz/commit/eba50bc))
+
+
+
+# [5.2.0-beta.1](https://github.com/meetfranz/franz/compare/v5.1.0...v5.2.0-beta.1) (2019-06-11)
+
+
+### Bug Fixes
+
+* **Workspaces:** Service reordering within workspaces ([17f3a22](https://github.com/meetfranz/franz/commit/17f3a22))
+* **Proxy:** Fix issue with proxy authentication ([b9e5b23](https://github.com/meetfranz/franz/commit/b9e5b23))
+* **Announcements:** Fixes issue with rendering announcements in workspaces ([1e38ec5](https://github.com/meetfranz/franz/commit/1e38ec5))
+* **Windows:** Add Workspaces menu & fix Window menu ([92a61d4](https://github.com/meetfranz/franz/commit/92a61d4))
+* **Windows:** Replace tray icon with high-res version ([a5eb399](https://github.com/meetfranz/franz/commit/a5eb399))
+* **App:** Improved email validation ([dd8ddcc](https://github.com/meetfranz/franz/commit/dd8ddcc)) ([@Snuggle](https://github.com/Snuggle))
+
 
 ### General
 
-* **App:** Updated electron to 4.0.4
+* **Translations:** Improved translations. **[A million thanks to the amazing community. 🎉](http://i18n.meetfranz.com/)**
+* **App:** Update electron to 5.0.2 ([5828062](https://github.com/meetfranz/franz/commit/5828062))
+
+
+
+# [5.1.0](https://github.com/meetfranz/franz/compare/v5.1.0...v5.1.0-beta.1) (2019-04-16)
+
+### Features
+
+* **App:** Added Workspaces for all your daily routines 🎉 ([47c1c99](https://github.com/meetfranz/franz/commit/47c1c99))
+* **App:** Added [Team Management](https://meetfranz.com/user/team) 🎉 ([47c1c99](https://github.com/meetfranz/franz/commit/47c1c99))
+* **App:** Added Kerberos Support via Command Line Switches ([#1331](https://github.com/meetfranz/franz/issues/1331)) ([@frumania](https://github.com/frumania)) ([a1950d7](https://github.com/meetfranz/franz/commit/a1950d7))
+* **App:** Open changelog in app
+* **App:** Various small fixes and improvements 
+
+### General
+
+* **Translations:** Improved translations. **[A million thanks to the amazing community. 🎉](http://i18n.meetfranz.com/)**
+* **App:** Update electron to 4.1.4 ([2604914](https://github.com/meetfranz/franz/commit/2604914))
+
+
+# [5.1.0-beta.1](https://github.com/meetfranz/franz/compare/v5.0.1-beta.1...v5.1.0-beta.1) (2019-04-16)
+
+[See 5.1.0 changelog.](#5-1-0--2019-04-16-)
+
+# [5.0.1](https://github.com/meetfranz/franz/compare/v5.0.0...v5.0.1) (2019-03-25)
+
+### Features
+
+* **App:** Add security checks for external URLs ([6e5531a](https://github.com/meetfranz/franz/commit/6e5531a))
+* **Linux:** Add auto updater for Linux AppImage builds ([d641b4e](https://github.com/meetfranz/franz/commit/d641b4e))
+* **Spell check:** Add British English as spell check language ([#1306](https://github.com/meetfranz/franz/issues/1306)) ([67fa325](https://github.com/meetfranz/franz/commit/67fa325))
+* **Windows:** Add option to quit Franz from Taskbar icon ([952fc8b](https://github.com/meetfranz/franz/commit/952fc8b))
+
+### Bug Fixes
+
+* **Linux:** Fix minimized window focusing ([#1304](https://github.com/meetfranz/franz/issues/1304)) ([@skoruppa](https://github.com/skoruppa)) ([5b02c4d](https://github.com/meetfranz/franz/commit/5b02c4d))
+* **Notifications:** Fix notifications & notification click when icon is blob ([03589f6](https://github.com/meetfranz/franz/commit/03589f6))
+* **Service:** Fix service zoom (cmd/ctrl+ & cmd/ctrl-) ([91a0f59](https://github.com/meetfranz/franz/commit/91a0f59))
+* **Service:** Fix shortcut for (un)muting notifications & audio ([1df3342](https://github.com/meetfranz/franz/commit/1df3342))
+* **Windows:** Fix copy & paste in service context menus ([e66fcaa](https://github.com/meetfranz/franz/commit/e66fcaa)), closes [#1316](https://github.com/meetfranz/franz/issues/1316)
+* **Windows:** Fix losing window when "Keep Franz in background" is enabled ([78a3722](https://github.com/meetfranz/franz/commit/78a3722))
+
+### General
+
+* **Translations:** Improved translations. **[A million thanks to the amazing community. 🎉](http://i18n.meetfranz.com/)**
+* **App:** Update electron to 4.0.8 ([8336d17](https://github.com/meetfranz/franz/commit/8336d17))
+
+
+# [5.0.1-beta.1](https://github.com/meetfranz/franz/compare/v5.0.0...v5.0.1-beta.1) (2019-03-18)
+
+[See 5.0.1 changelog.](#5-0-1--2019-03-25-)
+
+# [5.0.0](https://github.com/meetfranz/franz/compare/5.0.0-beta.24...5.0.0) (2019-02-15)
 
 ### Features
 
@@ -12,6 +85,10 @@
 ### Bug Fixes
 
 * **App:** Various bugfixes and improvements
+
+### General
+
+* **App:** Updated electron to 4.0.4
 
 
 

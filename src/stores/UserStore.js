@@ -142,6 +142,10 @@ export default class UserStore extends Store {
     return this.getUserInfoRequest.execute().result || {};
   }
 
+  @computed get isPremium() {
+    return !!this.data.isPremium;
+  }
+
   @computed get legacyServices() {
     return this.getLegacyServicesRequest.execute() || {};
   }
@@ -174,6 +178,7 @@ export default class UserStore extends Store {
       password,
       accountType,
       company,
+      locale: this.stores.app.locale,
     });
 
     this.hasCompletedSignup = false;
@@ -324,8 +329,7 @@ export default class UserStore extends Store {
         authToken,
       });
     } catch (err) {
-      console.error('AccessToken Invalid');
-
+      this._logout();
       return false;
     }
   }
