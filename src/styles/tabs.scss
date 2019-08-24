@@ -33,7 +33,7 @@
   width: $theme-sidebar-width;
 
   &.is-active {
-    background: #dfdfdf;
+    background: rgba(210, 210, 210, .95);
     border-left: 4px solid transparent;
 
     .tab-item__icon { margin-left: -4px; }

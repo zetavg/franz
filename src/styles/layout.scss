@@ -63,7 +63,7 @@ html { overflow: hidden; }
 
 .sidebar {
   align-items: center;
-  background: #f6f6f6;
+  background: rgba(246, 246, 246, .85);
   border-right: 1px solid #dfdfdf;
   color: $theme-text-color;
   display: flex;
